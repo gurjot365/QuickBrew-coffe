@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickBrew - Coffee Delivery</title>
+  <style>
+    /* Modern, coffee-themed colors */
+    :root {
+      --coffee-dark: #3A2D2B;
+      --coffee-light: #D2B48C;
+      --cream: #F5F5DC;
+      --accent: #8B5A2B;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      background-color: var(--cream);
+      color: var(--coffee-dark);
+    }
+
+    header {
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                  url('https://images.unsplash.com/photo-1497935586351-b67a49e012bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+      background-size: cover;
+      color: white;
+      text-align: center;
+      padding: 4rem 1rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: var(--coffee-dark);
+    }
+
+    .menu {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 2rem;
+    }
+
+    .coffee-card {
+      background: white;
+      border-radius: 10px;
+      width: 200px;
+      padding: 1rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .coffee-card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .order-form {
+      max-width: 500px;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    /* Dialog Box */
+    .dialog-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .dialog-box {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 400px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>QuickBrew</h1>
+    <p>Artisanal coffee delivered to your door in 30 mins</p>
+    <button class="btn" onclick="document.getElementById('order-form').scrollIntoView()">Order Now</button>
+  </header>
+
+  <section class="menu">
+    <div class="coffee-card">
+      <img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="Espresso">
+      <h3>Espresso</h3>
+      <p>$3.50</p>
+    </div>
+    <div class="coffee-card">
+      <img src="https://images.unsplash.com/photo-1512568400610-62da28bc8a13?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="Cappuccino">
+      <h3>Cappuccino</h3>
+      <p>$4.00</p>
+    </div>
+    <div class="coffee-card">
+      <img src="https://images.unsplash.com/photo-1534687941688-651ccaafbff8?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="Latte">
+      <h3>Latte</h3>
+      <p>$4.50</p>
+    </div>
+  </section>
+
+  <section id="order-form" class="order-form">
+    <h2>Place Your Order</h2>
+    <form id="coffeeOrder">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" required>
+      </div>
+      <div class="form-group">
+        <label for="coffee">Coffee Choice</label>
+        <select id="coffee" required>
+          <option value="">Select...</option>
+          <option value="espresso">Espresso ($3.50)</option>
+          <option value="cappuccino">Cappuccino ($4.00)</option>
+          <option value="latte">Latte ($4.50)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="address">Delivery Address</label>
+        <textarea id="address" rows="3" required></textarea>
+      </div>
+      <button type="submit" class="btn">Confirm Order</button>
+    </form>
+  </section>
+
+  <!-- Dialog Box -->
+  <div id="dialog" class="dialog-overlay">
+    <div class="dialog-box">
+      <h3>Order Confirmed!</h3>
+      <p id="dialog-message">Your coffee is on the way!</p>
+      <button class="btn" onclick="document.getElementById('dialog').style.display='none'">OK</button>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('coffeeOrder').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('name').value;
+      const coffee = document.getElementById('coffee').value;
+      
+      document.getElementById('dialog-message').textContent = 
+        Thanks, ${name}! Your ${coffee} will arrive soon.;
+      
+      document.getElementById('dialog').style.display = 'flex';
+      this.reset();
+    });
+  </script>
+</body>
+</html>
